@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+  api:
+    build: .
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/curvvtech
+      - PORT=4000
+      - JWT_SECRET=change-me
+      - JWT_EXPIRES_IN=1d
+      - RATE_LIMIT_PER_MIN=100
+    ports:
+      - '4000:4000'
+    command: ["node", "src/server.js"]
+volumes:
+  mongo_data:
