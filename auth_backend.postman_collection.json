@@ -1,75 +1,112 @@
+
 {
   "info": {
-    "name": "Auth Backend",
-    "_postman_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
-    "description": "Postman collection for testing the authentication backend",
+    "name": "Curvvtech Backend Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Register User",
+      "name": "Signup",
       "request": {
         "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
-        },
-        "url": {
-          "raw": "http://localhost:5000/api/auth/register",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
-          "path": ["api", "auth", "register"]
-        }
+        "header": [{"key":"Content-Type","value":"application/json"}],
+        "url": {"raw": "{{baseUrl}}/auth/signup", "host": ["{{baseUrl}}"], "path": ["auth","signup"]},
+        "body": {"mode":"raw","raw":"{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123\",\n  \"role\": \"user\"\n}"}
       }
     },
     {
-      "name": "Login User",
+      "name": "Login",
       "request": {
         "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
-        },
-        "url": {
-          "raw": "http://localhost:5000/api/auth/login",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
-          "path": ["api", "auth", "login"]
-        }
+        "header": [{"key":"Content-Type","value":"application/json"}],
+        "url": {"raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth","login"]},
+        "body": {"mode":"raw","raw":"{\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123\"\n}"}
       }
     },
     {
-      "name": "Get Profile (Protected)",
+      "name": "Register Device",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key":"Content-Type","value":"application/json"},
+          {"key":"Authorization","value":"Bearer {{token}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/devices", "host": ["{{baseUrl}}"], "path": ["devices"]},
+        "body": {"mode":"raw","raw":"{\n  \"name\": \"Living Room Light\",\n  \"type\": \"light\",\n  \"status\": \"active\"\n}"}
+      }
+    },
+    {
+      "name": "List Devices",
       "request": {
         "method": "GET",
+        "header": [{"key":"Authorization","value":"Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/devices?type=light&status=active", "host": ["{{baseUrl}}"], "path": ["devices"], "query":[{"key":"type","value":"light"},{"key":"status","value":"active"}]}
+      }
+    },
+    {
+      "name": "Update Device",
+      "request": {
+        "method": "PATCH",
         "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{jwt_token}}"
-          }
+          {"key":"Content-Type","value":"application/json"},
+          {"key":"Authorization","value":"Bearer {{token}}"}
         ],
-        "url": {
-          "raw": "http://localhost:5000/api/auth/profile",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
-          "path": ["api", "auth", "profile"]
-        }
+        "url": {"raw": "{{baseUrl}}/devices/{{deviceId}}", "host": ["{{baseUrl}}"], "path": ["devices","{{deviceId}}"]},
+        "body": {"mode":"raw","raw":"{\n  \"name\": \"Hall Light\"\n}"}
+      }
+    },
+    {
+      "name": "Delete Device",
+      "request": {
+        "method": "DELETE",
+        "header": [{"key":"Authorization","value":"Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/devices/{{deviceId}}", "host": ["{{baseUrl}}"], "path": ["devices","{{deviceId}}"]}
+      }
+    },
+    {
+      "name": "Heartbeat",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key":"Content-Type","value":"application/json"},
+          {"key":"Authorization","value":"Bearer {{token}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/devices/{{deviceId}}/heartbeat", "host": ["{{baseUrl}}"], "path": ["devices","{{deviceId}}","heartbeat"]},
+        "body": {"mode":"raw","raw":"{\n  \"status\": \"active\"\n}"}
+      }
+    },
+    {
+      "name": "Create Log",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key":"Content-Type","value":"application/json"},
+          {"key":"Authorization","value":"Bearer {{token}}"}
+        ],
+        "url": {"raw": "{{baseUrl}}/devices/{{deviceId}}/logs", "host": ["{{baseUrl}}"], "path": ["devices","{{deviceId}}","logs"]},
+        "body": {"mode":"raw","raw":"{\n  \"event\": \"units_consumed\",\n  \"value\": 2.5\n}"}
+      }
+    },
+    {
+      "name": "List Logs",
+      "request": {
+        "method": "GET",
+        "header": [{"key":"Authorization","value":"Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/devices/{{deviceId}}/logs?limit=10", "host": ["{{baseUrl}}"], "path": ["devices","{{deviceId}}","logs"], "query":[{"key":"limit","value":"10"}]}
+      }
+    },
+    {
+      "name": "Aggregated Usage",
+      "request": {
+        "method": "GET",
+        "header": [{"key":"Authorization","value":"Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/devices/{{deviceId}}/usage?range=24h", "host": ["{{baseUrl}}"], "path": ["devices","{{deviceId}}","usage"], "query":[{"key":"range","value":"24h"}]}
       }
     }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000" },
+    { "key": "token", "value": "" },
+    { "key": "deviceId", "value": "" }
   ]
 }

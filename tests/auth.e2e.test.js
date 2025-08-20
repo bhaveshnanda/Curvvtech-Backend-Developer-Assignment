@@ -1,13 +1,19 @@
 // tests/auth.e2e.test.js
-import request from 'supertest';
-import app from '../src/app.js';
+import request from "supertest";
+import app from "../src/app.js";
 
-// NOTE: For brevity, this sample test uses the running app only for shape checking.
-// In a real setup, spin up an in-memory Mongo (mongodb-memory-server) and isolate DB.
+describe("Auth Routes", () => {
+  it("should reject signup with empty body", async () => {
+    const res = await request(app).post("/auth/signup").send({});
+    expect(res.status).toBe(400); // expect bad request
+  });
 
-describe('Auth routes shape', () => {
-  it('rejects bad signup', async () => {
-    const res = await request(app).post('/auth/signup').send({});
-    expect(res.status).toBe(400);
+  it("should signup a new user", async () => {
+    const res = await request(app).post("/auth/signup").send({
+      email: "testing@example.com",
+      password: "mypassword12345",
+    });
+    expect(res.status).toBe(201); // expect success
+    expect(res.body).toHaveProperty("token"); // token must be returned
   });
 });

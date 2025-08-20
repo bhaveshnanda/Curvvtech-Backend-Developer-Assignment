@@ -1,4 +1,3 @@
-// README.md
 # Curvvtech Backend (Node + Express + Mongo)
 
 A clean, conventional REST API for a simplified Smart Device Management Platform.
