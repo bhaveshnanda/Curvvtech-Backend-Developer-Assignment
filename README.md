@@ -1,4 +1,5 @@
 # Curvvtech Backend (Node + Express + Mongo)
+(IMP NOTE: please rename .env.ecample to .env)
 
 A clean, conventional REST API for a simplified Smart Device Management Platform.
 
