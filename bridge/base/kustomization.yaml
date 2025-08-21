@@ -1,0 +1,14 @@
+#! kustomization.yaml
+# Generated code, do not edit
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - 0-backend-namespace.yaml
+    - api-deployment.yaml
+    - api-expose.yaml
+    - api-service.yaml
+    - default-network-policy.yaml
+    - mongo-deployment.yaml
+    - mongo-expose.yaml
+    - mongo-mongo_data-persistentVolumeClaim.yaml
+    - mongo-service.yaml

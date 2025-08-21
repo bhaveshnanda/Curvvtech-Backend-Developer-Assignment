@@ -1,0 +1,44 @@
+#! api-deployment.yaml
+# Generated code, do not edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: api
+    namespace: backend
+    labels:
+        com.docker.compose.project: backend
+        com.docker.compose.service: api
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            com.docker.compose.project: backend
+            com.docker.compose.service: api
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                com.docker.compose.project: backend
+                com.docker.compose.service: api
+                com.docker.compose.network.default: "true"
+        spec:
+            containers:
+                - name: api
+                  image: curvvtech-api
+                  imagePullPolicy: IfNotPresent
+                  command: [node src/server.js]
+                  env:
+                    - name: JWT_EXPIRES_IN
+                      value: "1d"
+                    - name: JWT_SECRET
+                      value: "mySuperStrongSecretKey123!@"
+                    - name: MONGO_URI
+                      value: "mongodb://mongo:27017/curvvtech"
+                    - name: PORT
+                      value: "4000"
+                    - name: RATE_LIMIT_PER_MIN
+                      value: "100"
+                  ports:
+                    - name: api-4000
+                      containerPort: 4000
